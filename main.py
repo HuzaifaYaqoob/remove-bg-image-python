@@ -1,7 +1,7 @@
 
 from genericpath import isdir
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, messagebox
 
 import cv2
 
@@ -13,7 +13,7 @@ class BackgroundRemover():
         self.root = root_window
         self.root.title('Background Remover')
 
-        self.root.geometry('700x500+500+300')
+        self.root.geometry('500x200+500+300')
 
         self.selected_images = []
         self.selected_dir = ''
@@ -31,6 +31,9 @@ class BackgroundRemover():
 
         self.process = ttk.Button(self.header, text='Process Images', command=self.FolderProcessing)
         self.process.pack(side=tk.RIGHT,)
+
+        self.notify_text = tk.Label(self.root, text='')
+        self.notify_text.pack()
 
     
     def UploadBtnClick(self):
@@ -97,6 +100,7 @@ class BackgroundRemover():
         os.chdir(folder_name)
         folder = os.listdir()
         current_folder = os.path.abspath(os.getcwd())
+        current_folder = current_folder.replace('\\', '/')
 
         if len(folder) > 0:
             for i in folder:
@@ -114,8 +118,10 @@ class BackgroundRemover():
 
 
     def FolderProcessing(self):
+        self.notify_text.config(text='Please wait...')
         self.processFoldersRecur(self.selected_dir)
-
+        self.notify_text.config(text='Process done')
+        self.root.quit()
 
     def saveImage(self):
         pass
